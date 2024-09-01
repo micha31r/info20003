@@ -112,7 +112,7 @@ HAVING COUNT(caseID) >= 1 AND COUNT(postID) >= 3;
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q8
 
-SELECT channel.channelID, channelName, COUNT(virusScanned) as totalVirusInfectedAttachements
+SELECT channel.channelID, channelName, COUNT(virusScanned) AS totalVirusInfectedAttachements
 FROM channel
 INNER JOIN postchannel ON postchannel.channelID = channel.channelID
 INNER JOIN post ON post.postPermanentID = postchannel.postID
@@ -124,7 +124,7 @@ HAVING COUNT(virusScanned) IN (
 	SELECT *
   FROM (
 		-- Get the top three biggest channel virus counts, across all channels
-		SELECT DISTINCT COUNT(virusScanned) as virusCount
+		SELECT DISTINCT COUNT(virusScanned) AS virusCount
 		FROM attachmentobject
 		INNER JOIN post ON post.postPermanentID = attachmentobject.postPermanentID
 		INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
