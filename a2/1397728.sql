@@ -46,8 +46,19 @@ WHERE username = 'axe' AND viewCount >= 9000;
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q4
 
-
-
+SELECT originalPostID as postPermanentID, COUNT(originalPostID) as totalCommentCount
+FROM postreply
+GROUP BY originalPostID
+HAVING COUNT(originalPostID) = (
+	-- Get the maximum comment count across all posts
+	SELECT MAX(commentCount)
+	FROM (
+		-- Get the number of comments for each post
+		SELECT COUNT(originalPostID) as commentCount
+		FROM postreply
+		GROUP BY originalPostID
+	) a -- Pseudo table name
+)
 
 -- END Q4
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
