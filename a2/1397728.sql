@@ -58,21 +58,22 @@ HAVING COUNT(originalPostID) = (
 		FROM postreply
 		GROUP BY originalPostID
 	) a -- Pseudo table name
-)
+);
 
 -- END Q4
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q5
 
-
-
-
+SELECT dataURL, channel.channelID
+FROM attachmentobject
+INNER JOIN post ON post.postPermanentID = attachmentobject.postPermanentID
+INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
+INNER JOIN channel ON channel.channelID = postchannel.channelID
+WHERE channelName LIKE '%dota2%';
 
 -- END Q5
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q6
-
-
 
 
 
