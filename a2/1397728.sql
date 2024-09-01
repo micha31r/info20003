@@ -46,7 +46,7 @@ WHERE username = 'axe' AND viewCount >= 9000;
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q4
 
-SELECT originalPostID as postPermanentID, COUNT(originalPostID) as totalCommentCount
+SELECT originalPostID AS postPermanentID, COUNT(originalPostID) AS totalCommentCount
 FROM postreply
 GROUP BY originalPostID
 HAVING COUNT(originalPostID) = (
@@ -54,7 +54,7 @@ HAVING COUNT(originalPostID) = (
 	SELECT MAX(commentCount)
 	FROM (
 		-- Get the number of comments for each post
-		SELECT COUNT(originalPostID) as commentCount
+		SELECT COUNT(originalPostID) AS commentCount
 		FROM postreply
 		GROUP BY originalPostID
 	) a -- Pseudo table name
@@ -75,7 +75,7 @@ WHERE channelName LIKE '%dota2%';
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q6
 
-SELECT channel.channelID, COUNT(react.postID) as heartCount
+SELECT channel.channelID, COUNT(react.postID) AS heartCount
 FROM react
 INNER JOIN post ON post.postPermanentID = react.postID
 INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
@@ -86,7 +86,7 @@ HAVING COUNT(react.postID) = (
 	SELECT MAX(reactCount)
 	FROM (
     -- Get react count for each channel
-		SELECT COUNT(react.postID) as reactCount
+		SELECT COUNT(react.postID) AS reactCount
 		FROM react
 		INNER JOIN post ON post.postPermanentID = react.postID
 		INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
