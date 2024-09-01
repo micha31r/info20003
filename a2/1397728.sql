@@ -57,7 +57,7 @@ HAVING COUNT(originalPostID) = (
 		SELECT COUNT(originalPostID) AS commentCount
 		FROM postreply
 		GROUP BY originalPostID
-	) a -- Pseudo table name
+	) a -- Derived table name
 );
 
 -- END Q4
@@ -85,28 +85,36 @@ HAVING COUNT(react.postID) = (
   -- Get the maximum react count across all channels
 	SELECT MAX(reactCount)
 	FROM (
-    -- Get react count for each channel
+    -- Get total react count for each channel
 		SELECT COUNT(react.postID) AS reactCount
 		FROM react
 		INNER JOIN post ON post.postPermanentID = react.postID
 		INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
 		INNER JOIN channel ON channel.channelID = postchannel.channelID 
 		GROUP BY channel.channelID
-	) a
+	) a -- Derived table name
 );
 
 -- END Q6
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q7
 
-SELECT user.userID, reputation, COUNT(caseID) AS totalModeratorReports, COUNT(postID) AS totalLoveReacts
-FROM user
-INNER JOIN post ON post.authorID = user.userID
+SELECT user1.userID, reputation, COUNT(moderatorreport.caseID) as totalModeratorReports, reactCount as totalLoveReacts
+FROM user user1
+INNER JOIN post ON post.authorID = user1.userID
+-- The result of the inner join means we don't need to check if the user has at least 1 moderator report
 INNER JOIN moderatorreport ON moderatorreport.postPermanentID = post.postPermanentID
-INNER JOIN react ON react.postID = post.postPermanentID
-WHERE reputation < 60
-GROUP BY user.userID
-HAVING COUNT(caseID) >= 1 AND COUNT(postID) >= 3;
+INNER JOIN (
+	-- Count the total number of love reacts each user has across all posts
+	SELECT COUNT(react.postID) as reactCount, user2.userID as user2ID
+	FROM react
+	INNER JOIN post ON post.postPermanentID = react.postID
+	INNER JOIN user user2 ON user2.userID = post.authorID
+	WHERE user2.reputation < 60
+	GROUP BY user2.userID
+	HAVING COUNT(react.postID) >= 3
+) a ON user1.userID = user2ID
+GROUP BY user1.userID
 
 -- END Q7
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
