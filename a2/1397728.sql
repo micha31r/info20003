@@ -99,9 +99,14 @@ HAVING COUNT(react.postID) = (
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q7
 
-
-
-
+SELECT user.userID, reputation, COUNT(caseID) AS totalModeratorReports, COUNT(postID) AS totalLoveReacts
+FROM user
+INNER JOIN post ON post.authorID = user.userID
+INNER JOIN moderatorreport ON moderatorreport.postPermanentID = post.postPermanentID
+INNER JOIN react ON react.postID = post.postPermanentID
+WHERE reputation < 60
+GROUP BY user.userID
+HAVING COUNT(caseID) >= 1 AND COUNT(postID) >= 3;
 
 -- END Q7
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
