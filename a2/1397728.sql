@@ -162,9 +162,24 @@ ORDER BY modID ASC;
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q10
 
-
-
-
+SELECT userID
+FROM user
+WHERE userID NOT IN (
+	-- Get users who have posted/commented in ranked_grind channel before 01/04/2024
+	SELECT authorID
+    FROM post
+	INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
+	INNER JOIN channel ON channel.channelID = postchannel.channelID
+	WHERE channelName LIKE 'ranked_grind' AND DATE(post.dateCreated) < '2024-04-01'
+) AND userID IN (
+	-- Get users who has commented in dota2_memes on or after 01/04/2024
+	SELECT authorID
+	FROM post
+	INNER JOIN postreply ON postreply.replyPostID = post.postPermanentID
+	INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
+	INNER JOIN channel ON channel.channelID = postchannel.channelID
+	WHERE channelName LIKE 'dota2_memes' AND DATE(post.dateCreated) >= '2024-04-01'
+);
 
 -- END Q10
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
