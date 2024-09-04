@@ -81,7 +81,7 @@ INNER JOIN post ON post.postPermanentID = react.postID
 INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
 INNER JOIN channel ON channel.channelID = postchannel.channelID 
 WHERE emoji = 'love'
-GROUP BY channelID
+GROUP BY channel.channelID
 HAVING COUNT(react.postID) = (
   -- Get the maximum react count across all channels
 	SELECT MAX(reactCount)
@@ -163,7 +163,7 @@ WHERE authorID IN (
 	INNER JOIN channel ON channel.channelID = postchannel.channelID
 	INNER JOIN moderatorreport ON moderatorreport.postPermanentID = post.postPermanentID
 	GROUP BY userID
-	HAVING COUNT(channel.channelID) > 1
+	HAVING COUNT(DISTINCT channel.channelID) > 1
 ) AND disciplinaryAction = 1
 GROUP BY modID
 ORDER BY modID ASC;
