@@ -75,11 +75,12 @@ WHERE channelName LIKE '%dota2%';
 -- ____________________________________________________________________________________________________________________________________________________________________________________________________________
 -- BEGIN Q6
 
-SELECT channel.channelID, COUNT(react.postID) AS heartCount
+SELECT channel.channelName, COUNT(react.postID) AS heartCount
 FROM react
 INNER JOIN post ON post.postPermanentID = react.postID
 INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
 INNER JOIN channel ON channel.channelID = postchannel.channelID 
+WHERE emoji = 'love'
 GROUP BY channelID
 HAVING COUNT(react.postID) = (
   -- Get the maximum react count across all channels
@@ -91,6 +92,7 @@ HAVING COUNT(react.postID) = (
 		INNER JOIN post ON post.postPermanentID = react.postID
 		INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
 		INNER JOIN channel ON channel.channelID = postchannel.channelID 
+    WHERE emoji = 'love'
 		GROUP BY channel.channelID
 	) a -- Derived table name
 );
