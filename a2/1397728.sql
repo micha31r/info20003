@@ -112,7 +112,7 @@ INNER JOIN (
 	FROM react
 	INNER JOIN post ON post.postPermanentID = react.postID
 	INNER JOIN user user2 ON user2.userID = post.authorID
-	WHERE user2.reputation < 60
+	WHERE user2.reputation < 60 and emoji = 'love'
 	GROUP BY user2.userID
 	HAVING COUNT(react.postID) >= 3
 ) a ON user1.userID = user2ID
