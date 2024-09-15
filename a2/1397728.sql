@@ -151,7 +151,7 @@ HAVING COUNT(virusScanned) IN (
 -- BEGIN Q9
 
 -- Out of reported users, get incidents where disciplinary action was taken
-SELECT modID, count(caseID) AS numberOfDisciplinariesToRepeaters
+SELECT modID, SUM(moderatorreport.disciplinaryAction) AS numberOfDisciplinariesToRepeaters
 FROM post
 INNER JOIN moderatorreport ON moderatorreport.postPermanentID = post.postPermanentID
 WHERE authorID IN (
@@ -160,11 +160,10 @@ WHERE authorID IN (
 	FROM post
 	INNER JOIN user ON user.userID = post.authorID
 	INNER JOIN postchannel ON postchannel.postID = post.postPermanentID
-	INNER JOIN channel ON channel.channelID = postchannel.channelID
 	INNER JOIN moderatorreport ON moderatorreport.postPermanentID = post.postPermanentID
 	GROUP BY userID
-	HAVING COUNT(DISTINCT channel.channelID) > 1
-) AND disciplinaryAction = 1
+	HAVING COUNT(DISTINCT postchannel.channelID) > 1
+)
 GROUP BY modID
 ORDER BY modID ASC;
 
